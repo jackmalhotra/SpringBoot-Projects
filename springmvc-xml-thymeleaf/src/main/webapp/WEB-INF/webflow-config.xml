@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:task="http://www.springframework.org/schema/task" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:webflow="http://www.springframework.org/schema/webflow-config"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  
+		http://www.springframework.org/schema/beans/spring-beans-4.3.xsd 
+	    http://www.springframework.org/schema/webflow-config
+		http://www.springframework.org/schema/webflow-config/spring-webflow-config.xsd">
+	
+	<webflow:flow-executor id="bookSearchFlowExecutor" flow-registry="bookSearchFlowRegistry">
+	<webflow:flow-execution-attributes>
+		<webflow:always-redirect-on-pause value="false"/>
+	</webflow:flow-execution-attributes>	
+	</webflow:flow-executor>
+	
+	<bean class="org.springframework.webflow.mvc.servlet.FlowHandlerMapping">
+		<property name="flowRegistry" ref="bookSearchFlowRegistry" />
+		<property name="order" value="-1" />
+	</bean>
+
+	<bean class="org.springframework.webflow.mvc.servlet.FlowHandlerAdapter">
+		<property name="flowExecutor" ref="bookSearchFlowExecutor" />
+	</bean>
+
+	<!-- This creates an XmlFlowRegistryFactory bean -->
+	<webflow:flow-registry id="bookSearchFlowRegistry">
+		<webflow:flow-location id="bookSearchFlow" path="/WEB-INF/views/book-search-flow.xml" />
+	</webflow:flow-registry>
+	
+	<webflow:flow-builder-services id="flowBuilderServices" view-factory-creator="viewFactoryCreator" />
+	
+	<bean id="viewFactoryCreator" class="org.springframework.webflow.mvc.builder.MvcViewFactoryCreator">
+		<property name="viewResolvers" ref="thymeleafViewResolver" />
+	</bean>
+	
+</beans>
